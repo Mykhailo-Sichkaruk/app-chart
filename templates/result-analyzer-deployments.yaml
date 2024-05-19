@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: thesis
+  name: result-analyzer
+  labels:
+    app: result-analyzer
+spec:
+  replicas: {{ .Values.resultAnalyzer.replicaCount }}
+  selector:
+    matchLabels:
+      app: result-analyzer
+  template:
+    metadata:
+      labels:
+        app: result-analyzer
+    spec:
+      containers:
+        - name: result-analyzer
+          image: "{{ .Values.resultAnalyzer.image.repository }}:{{ .Values.resultAnalyzer.image.tag }}"
+          imagePullPolicy: {{ .Values.resultAnalyzer.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.resultAnalyzer.service.port }}
+          env:
+            - name: RABBITMQ_URL
+              value: "amqp://rabbitmq:{{ .Values.rabbitmq.service.port }}"
+            - name: MONGODB_URL
+              value: "mongodb://mongodb:{{ .Values.mongodb.service.port }}/testresults"
+            - name: ENVIRONMENT
+              value: {{ .Values.config.environment }}
+            - name: API_PREFIX
+              value: {{ .Values.config.apiPrefix }}
+            - name: API_VERSION
+              value: {{ .Values.config.apiVersion }}
+            - name: API_HOST
+              value: {{ .Values.config.apiHost }}
+            - name: LOGS_PATH
+              value: {{ .Values.config.logsPath }}
+            - name: COOKIE_SECRET
+              value: {{ .Values.config.cookieSecret }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: thesis
+  name: result-analyzer
+spec:
+  ports:
+    - port: 80
+      targetPort: {{ .Values.resultAnalyzer.service.port }}
+  selector:
+    app: result-analyzer

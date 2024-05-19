@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "app-chart.fullname" . }}-test-connection"
+  labels:
+    {{- include "app-chart.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: rabbitmq
+      image: busybox
+      command: ['wget']
+      args: ['rabbitmq:{{ .Values.rabbitmq.service.port }}']
+    - name: mongodb
+      image: busybox
+      command: ['wget']
+      args: ['mongodb:{{ .Values.mongodb.service.port }}']
+    - name: worker-manager
+      image: busybox
+      command: ['wget']
+      args: ['worker-manager:{{ .Values.workerManager.service.port }}']
+    - name: result-analyzer
+      image: busybox
+      command: ['wget']
+      args: ['result-analyzer:{{ .Values.resultAnalyzer.service.port }}']
+  restartPolicy: Never

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashboard
+  namespace: thesis
+  labels:
+    app: dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashboard
+  template:
+    metadata:
+      labels:
+        app: dashboard
+    spec:
+      containers:
+        - name: dashboard
+          image: myrepo/dashboard:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: ENVIRONMENT
+              value: {{ .Values.config.environment }}
+            - name: API_PREFIX
+              value: {{ .Values.config.apiPrefix }}
+            - name: API_VERSION
+              value: {{ .Values.config.apiVersion }}
+            - name: API_HOST
+              value: {{ .Values.config.apiHost }}
+            - name: LOGS_PATH
+              value: {{ .Values.config.logsPath }}
+            - name: COOKIE_SECRET
+              value: {{ .Values.config.cookieSecret }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard
+  namespace: thesis
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+  selector:
+    app: dashboard

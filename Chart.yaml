@@ -1,0 +1,5 @@
+apiVersion: v2
+name: thesis-app
+description: A Helm chart for Thesis Application
+version: 0.1.0
+appVersion: "1.0"

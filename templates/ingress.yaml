@@ -1,0 +1,48 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: thesis-app-ingress
+  namespace: thesis
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: worker-manager.local
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: worker-manager
+                port:
+                  number: {{ .Values.workerManager.service.port }}
+    - host: result-analyzer.local
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: result-analyzer
+                port:
+                  number: {{ .Values.resultAnalyzer.service.port }}
+    - host: dashboard.local
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: dashboard
+                port:
+                  number: 80
+  {{- if .Values.ingress.tls }}
+  tls:
+    {{- range .Values.ingress.tls }}
+    - secretName: {{ .secretName }}
+      hosts:
+        {{- range .hosts }}
+        - {{ . }}
+        {{- end }}
+    {{- end }}
+  {{- end }}

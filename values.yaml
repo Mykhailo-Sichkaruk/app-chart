@@ -1,0 +1,68 @@
+rabbitmq:
+  image:
+    repository: rabbitmq
+    tag: 3-management
+    pullPolicy: IfNotPresent
+  service:
+    port: "5672"
+  managementPort: "15672"
+
+mongodb:
+  image:
+    repository: mongo
+    tag: 4.4
+    pullPolicy: IfNotPresent
+  service:
+    port: "27017"
+
+workerManager:
+  replicaCount: 1
+  image:
+    repository: myrepo/worker-manager
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: "3000"
+
+resultAnalyzer:
+  replicaCount: 1
+  image:
+    repository: myrepo/result-analyzer
+    tag: latest
+    pullPolicy: IfNotPresent
+  service:
+    port: "3000"
+
+config:
+  environment: "development"
+  apiPrefix: "/api"
+  apiVersion: "1.0"
+  apiHost: "http://localhost:3000"
+  logsPath: "/var/log/app"
+  cookieSecret: "verysecretkey"
+
+serviceAccount:
+  create: true
+  name: ""
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: worker-manager.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+    - host: result-analyzer.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+autoscaling:
+  enabled: false
+  minReplicas: "1"
+  maxReplicas: "10"
+  targetCPUUtilizationPercentage: "80"
+  targetMemoryUtilizationPercentage: "80"
