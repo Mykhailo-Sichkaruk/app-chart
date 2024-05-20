@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: thesis
   name: result-analyzer
   labels:
     app: result-analyzer
@@ -15,6 +14,7 @@ spec:
       labels:
         app: result-analyzer
     spec:
+      serviceAccountName: "{{ .Values.serviceAccount.name | default .Chart.Name }}"
       containers:
         - name: result-analyzer
           image: "{{ .Values.resultAnalyzer.image.repository }}:{{ .Values.resultAnalyzer.image.tag }}"
@@ -27,22 +27,25 @@ spec:
             - name: MONGODB_URL
               value: "mongodb://mongodb:{{ .Values.mongodb.service.port }}/testresults"
             - name: ENVIRONMENT
-              value: {{ .Values.config.environment }}
+              value: "{{ .Values.config.environment }}"
             - name: API_PREFIX
-              value: {{ .Values.config.apiPrefix }}
+              value: "{{ .Values.config.apiPrefix }}"
             - name: API_VERSION
-              value: {{ .Values.config.apiVersion }}
+              value: "{{ .Values.config.apiVersion }}"
             - name: API_HOST
-              value: {{ .Values.config.apiHost }}
+              value: "{{ .Values.config.apiHost }}"
+            - name: APP_HOST
+              value: "{{ .Values.config.appHost }}"
+            - name: APP_PORT
+              value: "{{ .Values.config.appPort }}"
             - name: LOGS_PATH
-              value: {{ .Values.config.logsPath }}
+              value: "{{ .Values.config.logsPath }}"
             - name: COOKIE_SECRET
-              value: {{ .Values.config.cookieSecret }}
+              value: "{{ .Values.config.cookieSecret }}"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  namespace: thesis
   name: result-analyzer
 spec:
   ports:

@@ -22,17 +22,17 @@ spec:
             - containerPort: 80
           env:
             - name: ENVIRONMENT
-              value: {{ .Values.config.environment }}
+              value: "{{ .Values.config.environment }}"
             - name: API_PREFIX
-              value: {{ .Values.config.apiPrefix }}
+              value: "{{ .Values.config.apiPrefix }}"
             - name: API_VERSION
-              value: {{ .Values.config.apiVersion }}
+              value: "{{ .Values.config.apiVersion }}"
             - name: API_HOST
-              value: {{ .Values.config.apiHost }}
+              value: "{{ .Values.config.apiHost }}"
             - name: LOGS_PATH
-              value: {{ .Values.config.logsPath }}
+              value: "{{ .Values.config.logsPath }}"
             - name: COOKIE_SECRET
-              value: {{ .Values.config.cookieSecret }}
+              value: "{{ .Values.config.cookieSecret }}"
 ---
 apiVersion: v1
 kind: Service

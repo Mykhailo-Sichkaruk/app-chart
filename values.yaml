@@ -16,28 +16,30 @@ mongodb:
     port: "27017"
 
 workerManager:
-  replicaCount: 1
+  replicaCount: "1"
   image:
-    repository: myrepo/worker-manager
-    tag: latest
-    pullPolicy: IfNotPresent
+    repository: worker-manager
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
   service:
     port: "3000"
 
 resultAnalyzer:
-  replicaCount: 1
+  replicaCount: "1"
   image:
-    repository: myrepo/result-analyzer
-    tag: latest
-    pullPolicy: IfNotPresent
+    repository: result-analyzer
+    tag: "latest"
+    pullPolicy: "IfNotPresent"
   service:
     port: "3000"
 
 config:
   environment: "development"
   apiPrefix: "/api"
-  apiVersion: "1.0"
+  apiVersion: "1"
   apiHost: "http://localhost:3000"
+  appHost: "0.0.0.0"
+  appPort: "3000"
   logsPath: "/var/log/app"
   cookieSecret: "verysecretkey"
 

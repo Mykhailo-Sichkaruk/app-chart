@@ -26,22 +26,22 @@ spec:
               value: "amqp://rabbitmq:{{ .Values.rabbitmq.service.port }}"
             - name: MONGODB_URL
               value: "mongodb://mongodb:{{ .Values.mongodb.service.port }}/testresults"
-            - name: KUBERNETES_SERVICE_HOST
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
             - name: ENVIRONMENT
-              value: {{ .Values.config.environment }}
+              value: "{{ .Values.config.environment }}"
             - name: API_PREFIX
-              value: {{ .Values.config.apiPrefix }}
+              value: "{{ .Values.config.apiPrefix }}"
             - name: API_VERSION
-              value: {{ .Values.config.apiVersion }}
+              value: "{{ .Values.config.apiVersion }}"
             - name: API_HOST
-              value: {{ .Values.config.apiHost }}
+              value: "{{ .Values.config.apiHost }}"
+            - name: APP_HOST
+              value: "{{ .Values.config.appHost }}"
+            - name: APP_PORT
+              value: "{{ .Values.config.appPort }}"
             - name: LOGS_PATH
-              value: {{ .Values.config.logsPath }}
+              value: "{{ .Values.config.logsPath }}"
             - name: COOKIE_SECRET
-              value: {{ .Values.config.cookieSecret }}
+              value: "{{ .Values.config.cookieSecret }}"
 ---
 apiVersion: v1
 kind: Service
