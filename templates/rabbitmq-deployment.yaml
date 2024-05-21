@@ -20,8 +20,13 @@ spec:
           image: "{{ .Values.rabbitmq.image.repository }}:{{ .Values.rabbitmq.image.tag }}"
           imagePullPolicy: {{ .Values.rabbitmq.image.pullPolicy }}
           ports:
-            - containerPort: {{ .Values.rabbitmq.service.port }}
-            - containerPort: {{ .Values.rabbitmq.managementPort }}
+            - containerPort: {{ .Values.rabbitmq.service.port | int }}
+            - containerPort: {{ .Values.rabbitmq.managementPort | int }}
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              value: "admin"
+            - name: RABBITMQ_DEFAULT_PASS
+              value: "password"
 ---
 apiVersion: v1
 kind: Service
@@ -30,11 +35,11 @@ metadata:
   namespace: thesis
 spec:
   ports:
-    - port: {{ .Values.rabbitmq.service.port }}
-      targetPort: {{ .Values.rabbitmq.service.port }}
+    - port: {{ .Values.rabbitmq.service.port | int }}
+      targetPort: {{ .Values.rabbitmq.service.port | int }}
       name: amqp
-    - port: {{ .Values.rabbitmq.managementPort }}
-      targetPort: {{ .Values.rabbitmq.managementPort }}
+    - port: {{ .Values.rabbitmq.managementPort | int }}
+      targetPort: {{ .Values.rabbitmq.managementPort | int }}
       name: management
   selector:
     app: rabbitmq
